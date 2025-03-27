@@ -6,7 +6,10 @@ const app = exp();
 const user = [{
     "house" : [],
     "bank" : [],
-    "stock":[0]
+    "stock":[0],
+},{
+    "bought":[0],
+    "sold":[0],
 }]
 
 app.use(exp.json());
@@ -27,20 +30,9 @@ app.post('/market',(req,res)=>{
 })
 //VALUE
 app.get('/value',(req,res)=>{
-    const current_house = user[0].house;
-    const current_money = user[0].bank;
-    const constant = current_house*current_money;
-    //Buy Value
-    const val1 = constant / (current_house - 1);
-    const buy_value = val1 - current_money;
-    //Sell Value
-    const val2 = constant / (current_house +1);
-    const sell_value = current_money - val2;
-    //Response
     res.status(200).json({
-        'Buy-for':buy_value,
-        'Sell-for':sell_value,
-        'Stocks in Wallet': user[0].stock
+        'Bought':user[1].bought[0],
+        'Sold':user[1].sold[0]
     })
 })
 //BUY
@@ -59,6 +51,7 @@ app.get('/buy',(req,res)=>{
     user[0].stock[0] = user[0].stock[0] + 1
     console.log(user[0]);
     console.log(valh1);
+    user[1].bought[0] = user[1].bought[0] + valh1;
     //Displaying Result
     res.status(200).json({
         'Stock Purchased': '-₹'+valh1,
@@ -80,6 +73,7 @@ app.get('/sell',(req,res)=>{
     user[0].house = current_house +1;
     user[0].bank = val1;
     user[0].stock[0] = user[0].stock[0] -1;
+    user[1].sold[0] = user[1].sold[0] + valh1;
     console.log(user[0]);
     console.log(valh1);
     res.status(200).json({
